@@ -7,12 +7,13 @@ import {
   Req,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostService } from './posts.service';
-import { AuthenticatedRequest } from '../common/request.interface'; // Ajusta la ruta si es necesario
-import { Post as PostEntity } from './posts.entity'; // Asegúrate de ajustar la ruta
+import { AuthenticatedRequest } from '../common/request.interface';
+import { Post as PostEntity } from './posts.entity';
 
 @Controller('posts')
 export class PostController {
@@ -29,13 +30,26 @@ export class PostController {
   }
 
   @Get()
-  async getAllPosts(): Promise<PostEntity[]> {
-    return this.postService.getAllPosts();
+  @UseGuards(JwtAuthGuard) // Protección añadida
+  async getAllPosts(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<{ posts: PostEntity[]; total: number }> {
+    const posts = await this.postService.getAllPosts(page, limit);
+    const total = await this.postService.countAllPosts(); // Método que cuenta el total de posts
+    return { posts, total };
   }
 
   @Get('user/:id')
-  async getPostsByUserId(@Param('id') userId: number): Promise<PostEntity[]> {
-    return this.postService.getPostsByUserId(userId);
+  @UseGuards(JwtAuthGuard) // Protección añadida
+  async getPostsByUserId(
+    @Param('id') userId: number,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<{ posts: PostEntity[]; total: number }> {
+    const posts = await this.postService.getPostsByUserId(userId, page, limit);
+    const total = await this.postService.countPostsByUserId(userId); // Método que cuenta el total de posts por usuario
+    return { posts, total };
   }
 
   @Delete(':id')
@@ -44,7 +58,7 @@ export class PostController {
     @Param('id') id: number,
     @Req() req: AuthenticatedRequest,
   ): Promise<void> {
-    const userId = req.user?.userId; // Debe coincidir con el payload de JWT
+    const userId = req.user?.userId;
     if (!userId) {
       throw new Error('User not authenticated');
     }

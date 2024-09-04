@@ -29,17 +29,20 @@ export class UserController {
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard) // Protege este endpoint con el guardia JWT
   async getMe(@Req() req: AuthenticatedRequest) {
     console.log('Authenticated user:', req.user); // Verifica la estructura de req.user
     return this.userService.findUserById(req.user.userId);
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard) // Protege este endpoint con el guardia JWT
   async getUserById(@Param('id') id: number): Promise<User | undefined> {
     return this.userService.findUserById(id);
   }
+
   @Get('email/:email')
+  @UseGuards(JwtAuthGuard) // Protege este endpoint con el guardia JWT
   async getUserByEmail(
     @Param('email') email: string,
   ): Promise<User | undefined> {

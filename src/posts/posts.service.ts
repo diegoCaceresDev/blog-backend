@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Post } from './posts.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { User } from '../user/user.entity';
@@ -42,17 +42,30 @@ export class PostService {
     return this.postRepository.save(newPost);
   }
 
-  async getAllPosts(): Promise<Post[]> {
-    // Cargar la relación del autor
-    return this.postRepository.find({ relations: ['author'] });
+  async getAllPosts(page: number = 1, limit: number = 10): Promise<Post[]> {
+    const options: FindManyOptions<Post> = {
+      relations: ['author'],
+      skip: (page - 1) * limit,
+      take: limit,
+    };
+
+    return this.postRepository.find(options);
   }
 
-  // Nuevo método para obtener todos los posts de un usuario por su ID
-  async getPostsByUserId(userId: number): Promise<Post[]> {
-    return this.postRepository.find({
+  // Ajuste para el método de obtener posts por ID de usuario
+  async getPostsByUserId(
+    userId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<Post[]> {
+    const options: FindManyOptions<Post> = {
       where: { author: { id: userId } },
-      relations: ['author'], // Cargar la relación del autor
-    });
+      relations: ['author'],
+      skip: (page - 1) * limit,
+      take: limit,
+    };
+
+    return this.postRepository.find(options);
   }
 
   // Método para eliminar un post por su ID
@@ -73,5 +86,13 @@ export class PostService {
     }
 
     await this.postRepository.delete(postId);
+  }
+
+  async countAllPosts(): Promise<number> {
+    return this.postRepository.count();
+  }
+
+  async countPostsByUserId(userId: number): Promise<number> {
+    return this.postRepository.count({ where: { author: { id: userId } } });
   }
 }
