@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import OpenAI from 'openai';
 import { CreateChatGptDto } from './dto/create-chatgpt.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ChatgptService {
   private openai: OpenAI;
 
-  constructor() {
+  constructor(private readonly configService: ConfigService) {
+    // Inyectar ConfigService
+    const apiKey = this.configService.get<string>('OPENAI_API_KEY'); // Obtener la API key
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY, // Asegúrate de configurar la API Key en las variables de entorno
+      apiKey: apiKey, // Asignar la API Key
     });
   }
 

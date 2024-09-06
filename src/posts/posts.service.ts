@@ -68,6 +68,20 @@ export class PostService {
     return this.postRepository.find(options);
   }
 
+  // Método para obtener un post por su ID
+  async getPostById(postId: number): Promise<Post> {
+    const post = await this.postRepository.findOne({
+      where: { id: postId },
+      relations: ['author'], // Incluye la relación con el autor
+    });
+
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    return post;
+  }
+
   // Método para eliminar un post por su ID
   async deletePostById(postId: number, userId: number): Promise<void> {
     const post = await this.postRepository.findOne({

@@ -52,6 +52,13 @@ export class PostController {
     return { posts, total };
   }
 
+  // Ruta para obtener un post por su ID
+  @Get(':id')
+  @UseGuards(JwtAuthGuard) // Protección añadida
+  async getPostById(@Param('id') postId: number): Promise<PostEntity> {
+    return this.postService.getPostById(postId);
+  }
+
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   async deletePost(

@@ -6,10 +6,10 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { User } from './user/user.entity';
 import { Post } from './posts/posts.entity';
-import { ChatgptService } from './chatgpt/chatgpt.service';
-import { ChatgptController } from './chatgpt/chatgpt.controller';
 import { ConfigModule } from '@nestjs/config';
 import { ChatgptModule } from './chatgpt/chatgpt.module';
+import { CommentsModule } from './comments/comments.module';
+import { Comment } from './comments/comment.entity';
 
 @Module({
   imports: [
@@ -23,15 +23,16 @@ import { ChatgptModule } from './chatgpt/chatgpt.module';
       username: 'postgres',
       password: 'diego1302',
       database: 'postgres',
-      entities: [User, Post],
+      entities: [User, Post, Comment],
       synchronize: true,
     }),
     PostsModule,
     UserModule,
     AuthModule,
     ChatgptModule,
+    CommentsModule,
   ],
-  providers: [ChatgptService],
-  controllers: [ChatgptController],
+  providers: [],
+  controllers: [],
 })
 export class AppModule {}

@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtModule } from '@nestjs/jwt'; // Importa JwtModule
-import { Post } from './posts.entity';
-import { PostService } from './posts.service';
-import { PostController } from './posts.controller';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // Asegúrate de que la ruta sea correcta
-import { User } from 'src/user/user.entity';
+import { Comment } from './comment.entity';
+import { CommentService } from './comments.service';
+import { CommentController } from './comments.controller';
+import { Post } from '../posts/posts.entity';
 import { UserModule } from 'src/user/user.module';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
+import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CommentGateway } from './comments.gateway';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Post, User]),
+    TypeOrmModule.forFeature([Comment, Post]),
     JwtModule.registerAsync({
       imports: [ConfigModule], // Asegúrate de importar ConfigModule
       inject: [ConfigService], // Inyecta ConfigService
@@ -23,7 +22,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
     UserModule,
   ],
-  providers: [PostService, JwtAuthGuard, JwtStrategy],
-  controllers: [PostController],
+  providers: [CommentService, CommentGateway], // Añade el gateway aquí
+  controllers: [CommentController],
 })
-export class PostsModule {}
+export class CommentsModule {}
