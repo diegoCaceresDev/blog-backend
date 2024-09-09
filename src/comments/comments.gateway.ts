@@ -36,7 +36,6 @@ export class CommentGateway
   async handleConnection(client: Socket) {
     console.log('Client connected:', client.id);
 
-    // Leer el token de la consulta en lugar del encabezado
     const token = client.handshake.query.token;
     console.log('Token recibido:', token);
 
