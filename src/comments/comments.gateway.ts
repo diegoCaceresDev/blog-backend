@@ -34,13 +34,9 @@ export class CommentGateway
   ) {}
 
   async handleConnection(client: Socket) {
-    console.log('Client connected:', client.id);
-
     const token = client.handshake.query.token;
-    console.log('Token recibido:', token);
 
     if (!token) {
-      console.log('No token provided, disconnecting client:', client.id);
       client.disconnect();
       return;
     }
@@ -49,7 +45,6 @@ export class CommentGateway
       const decoded = this.jwtService.verify(token as string);
       const user = await this.userService.findUserById(decoded.userId);
       client.data.user = user;
-      console.log('User authenticated:', user);
     } catch (e) {
       console.error('Token verification failed:', e.message);
       client.disconnect();

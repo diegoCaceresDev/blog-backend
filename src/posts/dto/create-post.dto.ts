@@ -1,9 +1,15 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreatePostDto {
   @IsNotEmpty()
-  readonly title: string;
+  @IsString()
+  title: string;
 
   @IsNotEmpty()
-  readonly content: string;
+  @IsString()
+  content: string;
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
 }

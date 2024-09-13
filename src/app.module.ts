@@ -10,6 +10,8 @@ import { Post } from './posts/posts.entity';
 import { ChatgptModule } from './chatgpt/chatgpt.module';
 import { CommentsModule } from './comments/comments.module';
 import { Comment } from './comments/comment.entity';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -31,13 +33,14 @@ import { Comment } from './comments/comment.entity';
         synchronize: false,
       }),
     }),
+
     PostsModule,
     UserModule,
     AuthModule,
     ChatgptModule,
     CommentsModule,
   ],
-  providers: [],
-  controllers: [],
+  providers: [AppService],
+  controllers: [AppController],
 })
 export class AppModule {}

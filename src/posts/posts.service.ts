@@ -8,6 +8,7 @@ import { FindManyOptions, Repository } from 'typeorm';
 import { Post } from './posts.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { User } from '../user/user.entity';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostService {
@@ -18,7 +19,11 @@ export class PostService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async createPost(createPostDto: CreatePostDto, user: any): Promise<Post> {
+  async createPost(
+    createPostDto: CreatePostDto,
+    user: any,
+    imageUrl: string | null,
+  ): Promise<Post> {
     const userId = user.userId;
 
     // Verifica que userId esté presente
@@ -33,9 +38,11 @@ export class PostService {
       throw new Error('User not found');
     }
 
+    // Crea un nuevo post con el `imageUrl`
     const newPost = this.postRepository.create({
       ...createPostDto,
       author: author, // Asociar el usuario con el post
+      imageUrl: imageUrl, // Asignar la URL de la imagen (puede ser null)
     });
 
     // Guarda el nuevo post
@@ -66,6 +73,33 @@ export class PostService {
     };
 
     return this.postRepository.find(options);
+  }
+
+  // Metodo que actualiza el post
+  async updatePost(
+    postId: number,
+    updatePostDto: UpdatePostDto,
+    userId: number,
+  ): Promise<Post> {
+    const post = await this.postRepository.findOne({
+      where: { id: postId },
+      relations: ['author'],
+    });
+
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    if (post.author.id !== userId) {
+      throw new UnauthorizedException(
+        'You are not authorized to update this post',
+      );
+    }
+
+    // Actualizar los campos del post
+    Object.assign(post, updatePostDto);
+
+    return this.postRepository.save(post);
   }
 
   // Método para obtener un post por su ID

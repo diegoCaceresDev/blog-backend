@@ -21,6 +21,9 @@ export class Post {
   @Column()
   content: string;
 
+  @Column({ nullable: true })
+  imageUrl: string; // Almacenar la URL de la imagen
+
   @CreateDateColumn()
   createdAt: Date;
 
