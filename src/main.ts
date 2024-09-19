@@ -6,17 +6,17 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Configuración para servir archivos estáticos desde la carpeta 'public'
-  app.useStaticAssets(join(__dirname, '../../', 'public'));
-  console.log(join(__dirname, '../../', 'public'));
-
-  // Configura CORS para permitir tanto el dominio del frontend como otros dominios relevantes
+  // Configura CORS antes de cualquier otra configuración
   app.enableCors({
-    origin: ['https://diegocaceres.online', 'https://api.diegocaceres.online'], // Permitir ambos dominios
+    origin: ['http://localhost:4200', 'https://diegocaceres.online'], // Agrega ambos dominios
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
     credentials: true,
   });
+
+  // Configuración para servir archivos estáticos desde la carpeta 'public'
+  app.useStaticAssets(join(__dirname, '../../', 'public'));
+  console.log(join(__dirname, '../../', 'public'));
 
   await app.listen(3000);
 }
