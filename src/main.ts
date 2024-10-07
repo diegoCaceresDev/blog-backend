@@ -8,7 +8,11 @@ async function bootstrap() {
 
   // Configura CORS dinámico basado en el origen de la solicitud
   app.enableCors({
-    origin: ['http://localhost:4200', 'https://blog.diegocaceres.online'], // Agrega ambos dominios
+    origin: [
+      'http://localhost:4200',
+      'http://localhost:3001',
+      'https://blog.diegocaceres.online',
+    ], // Agrega ambos dominios
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
     credentials: true,
