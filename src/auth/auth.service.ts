@@ -3,6 +3,7 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -26,8 +27,13 @@ export class AuthService {
     if (!user) {
       throw new Error('Invalid credentials');
     }
+
     return {
-      access_token: this.jwtService.sign({ userId: user.id }),
+      access_token: this.jwtService.sign({
+        userId: user.id,
+        role: user.role, // Incluimos el rol aquí
+        email: user.email, // Incluimos el email aquí
+      }),
     };
   }
 

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { CreateSuperUserDto } from './dto/create-superuser.dto';
 
 @Injectable()
 export class UserService {
@@ -27,6 +28,32 @@ export class UserService {
 
   async findUserById(id: number): Promise<User | undefined> {
     return this.userRepository.findOne({ where: { id } });
+  }
+
+  // Método para crear un superusuario
+  async createSuperUser(createUserDto: CreateSuperUserDto): Promise<User> {
+    const { username, password, email } = createUserDto;
+
+    // Verificar si el superusuario ya existe
+    const existingUser = await this.userRepository.findOne({
+      where: { username },
+    });
+    if (existingUser) {
+      throw new Error('Superuser already exists');
+    }
+
+    // Encriptar la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Crear el superusuario
+    const user = this.userRepository.create({
+      username,
+      email,
+      password: hashedPassword,
+      role: 'superuser', // Asegúrate de que haya un campo `role`
+    });
+
+    return await this.userRepository.save(user);
   }
 
   async validateUser(email: string, password: string): Promise<User | null> {

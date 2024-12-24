@@ -12,6 +12,7 @@ import { CommentsModule } from './comments/comments.module';
 import { Comment } from './comments/comment.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { PostReaction } from './posts/postreaction.entity';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { AppService } from './app.service';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User, Post, Comment],
+        entities: [User, Post, Comment, PostReaction],
         migrations: ['dist/migrations/*.js'],
         synchronize: false,
       }),

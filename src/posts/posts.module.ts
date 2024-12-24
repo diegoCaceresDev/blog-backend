@@ -9,16 +9,17 @@ import { User } from 'src/user/user.entity';
 import { UserModule } from 'src/user/user.module';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PostReaction } from './postreaction.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Post, User]),
+    TypeOrmModule.forFeature([Post, User, PostReaction]),
     JwtModule.registerAsync({
       imports: [ConfigModule], // Asegúrate de importar ConfigModule
       inject: [ConfigService], // Inyecta ConfigService
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_KEY'), // Usa ConfigService para obtener el JWT_KEY
-        signOptions: { expiresIn: '5m' },
+        signOptions: { expiresIn: '15m' },
       }),
     }),
     UserModule,

@@ -5,6 +5,9 @@ export class RegisterDto {
   nombre: string;
 
   @IsString()
+  username: string;
+
+  @IsString()
   apellido: string;
 
   @IsEmail()

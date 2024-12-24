@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Comment } from '../comments/comment.entity'; // Importa la entidad Comment
+import { PostReaction } from './postreaction.entity';
 
 @Entity()
 export class Post {
@@ -29,6 +30,15 @@ export class Post {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({ default: 0 }) // Campo para contar likes
+  likeCount: number;
+
+  @Column({ default: 0 }) // Campo para contar dislikes
+  dislikeCount: number;
+
+  @OneToMany(() => PostReaction, (reaction) => reaction.post, { cascade: true })
+  reactions: PostReaction[];
 
   @ManyToOne(() => User, (user) => user.posts, { eager: true })
   author: User;

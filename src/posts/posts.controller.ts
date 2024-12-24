@@ -22,6 +22,8 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { Multer } from 'multer';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { CreatePostReactionDto } from './dto/create-postreaction.dto';
+import { JwtAuthGuardWithRole } from 'src/auth/jwt-authwithrotle.guard';
 
 @Controller('posts')
 export class PostController {
@@ -53,16 +55,24 @@ export class PostController {
       },
     }),
   )
+  @Post()
+  @UseGuards(JwtAuthGuard)
   async createPost(
     @Body() createPostDto: CreatePostDto,
-    @UploadedFile() file: Express.Multer.File, // El archivo subido
-    @Req() req: any, // El usuario autenticado
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: AuthenticatedRequest,
   ) {
-    // Obtener la URL de la imagen o dejarla como null si no se subió imagen
-    const imageUrl = file ? file.filename : null;
-
-    // Llamada al servicio con los tres parámetros
-    return this.postService.createPost(createPostDto, req.user, imageUrl);
+    try {
+      const imageUrl = file ? file.filename : null;
+      const post = await this.postService.createPost(
+        createPostDto,
+        req.user,
+        imageUrl,
+      );
+      return { message: 'Post created successfully', data: post };
+    } catch (error) {
+      throw error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -104,7 +114,6 @@ export class PostController {
 
     // Si se subió una imagen, actualizar el campo imageUrl en el DTO
     if (file) {
-      console.log('File:', file); // Verifica si el archivo está presente
       const imageUrl = file ? file.filename : null;
       updatePostDto.imageUrl = imageUrl;
     }
@@ -113,14 +122,16 @@ export class PostController {
     return this.postService.updatePost(id, updatePostDto, userId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  @UseGuards(JwtAuthGuard) // Protección añadida
   async getAllPosts(
+    @Req() req: any,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
-  ): Promise<{ posts: PostEntity[]; total: number }> {
-    const posts = await this.postService.getAllPosts(page, limit);
-    const total = await this.postService.countAllPosts(); // Método que cuenta el total de posts
+  ): Promise<{ posts; total: number }> {
+    const userId = req.user.userId;
+    const posts = await this.postService.getAllPosts(userId, page, limit);
+    const total = await this.postService.countAllPosts();
     return { posts, total };
   }
 
@@ -136,6 +147,22 @@ export class PostController {
     return { posts, total };
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/reactions')
+  async reactToPost(
+    @Param('id') postId: number,
+    @Body() createReactionDto: CreatePostReactionDto,
+    @Req() req: any,
+  ) {
+    const userId = req.user.userId;
+    const updatedPost = await this.postService.addReactionToPost(
+      postId,
+      userId,
+      createReactionDto,
+    );
+    return { message: 'Reaction added successfully', data: updatedPost };
+  }
+
   // Ruta para obtener un post por su ID
   @Get(':id')
   @UseGuards(JwtAuthGuard) // Protección añadida
@@ -144,15 +171,15 @@ export class PostController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuardWithRole) // Usar el guardia extendido que agrega el rol al request
   async deletePost(
-    @Param('id') id: number,
-    @Req() req: AuthenticatedRequest,
-  ): Promise<void> {
-    const userId = req.user?.userId;
-    if (!userId) {
-      throw new Error('User not authenticated');
-    }
-    await this.postService.deletePostById(id, userId);
+    @Param('id') postId: number,
+    @Req() req: any, // El request ahora tiene userId y userRole
+  ) {
+    const userId = req.user.id; // ID del usuario autenticado
+    const userRole = req.user.role; // Rol del usuario autenticado
+    console.log(req.user);
+    await this.postService.deletePostById(postId, userId, userRole);
+    return { message: 'Post eliminado correctamente' };
   }
 }

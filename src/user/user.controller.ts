@@ -12,6 +12,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
 import { AuthenticatedRequest } from 'src/common/request.interface';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { CreateSuperUserDto } from './dto/create-superuser.dto';
 
 @Controller('users')
 export class UserController {
@@ -47,5 +48,10 @@ export class UserController {
     @Param('email') email: string,
   ): Promise<User | undefined> {
     return this.userService.findUserByEmail(email);
+  }
+
+  @Post('create-superuser')
+  async createSuperuser(@Body() createUserDto: CreateSuperUserDto) {
+    return this.userService.createSuperUser(createUserDto);
   }
 }

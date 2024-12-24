@@ -13,6 +13,7 @@ import { CommentService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
+import { ValidationPipe } from '@nestjs/common';
 
 @WebSocketGateway({
   cors: {
@@ -33,10 +34,11 @@ export class CommentGateway
     private readonly userService: UserService,
   ) {}
 
-  async handleConnection(client: Socket) {
+  async handleConnection(client: Socket): Promise<void> {
     const token = client.handshake.query.token;
 
     if (!token) {
+      console.log(`Client disconnected due to missing token: ${client.id}`);
       client.disconnect();
       return;
     }
@@ -44,32 +46,44 @@ export class CommentGateway
     try {
       const decoded = this.jwtService.verify(token as string);
       const user = await this.userService.findUserById(decoded.userId);
+      if (!user) {
+        console.log(`Client disconnected due to invalid user: ${client.id}`);
+        client.disconnect();
+        return;
+      }
       client.data.user = user;
+      console.log(`Client connected: ${client.id}`);
     } catch (e) {
       console.error('Token verification failed:', e.message);
       client.disconnect();
     }
   }
 
-  handleDisconnect(client: Socket) {
-    console.log('Client disconnected:', client.id);
+  handleDisconnect(client: Socket): void {
+    console.log(`Client disconnected: ${client.id}`);
   }
 
   @SubscribeMessage('createComment')
   async handleCreateComment(
-    @MessageBody() createCommentDto: CreateCommentDto,
+    @MessageBody(new ValidationPipe({ transform: true }))
+    createCommentDto: CreateCommentDto,
     @ConnectedSocket() client: Socket,
-  ) {
+  ): Promise<void> {
     if (!client.data.user) {
-      client.emit('error', 'Unauthenticated');
+      client.emit('error', 'No estás autenticado.');
       return;
     }
 
-    const user = client.data.user as User;
-    const newComment = await this.commentService.createComment(
-      createCommentDto,
-      user,
-    );
-    this.server.emit('commentCreated', newComment);
+    try {
+      const user = client.data.user as User;
+      const newComment = await this.commentService.createComment(
+        createCommentDto,
+        user,
+      );
+      this.server.emit('commentCreated', newComment);
+    } catch (error) {
+      console.error('Error creando el comentario:', error.message);
+      client.emit('error', `Error al crear el comentario: ${error.message}`);
+    }
   }
 }

@@ -7,6 +7,7 @@ import {
   Req,
   Get,
   Param,
+  BadRequestException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -21,15 +22,22 @@ export class CommentController {
     private readonly userService: UserService, // Inyecta el servicio de usuario
   ) {}
 
-  @Post()
   @UseGuards(JwtAuthGuard)
+  @Post()
   async createComment(
     @Body() createCommentDto: CreateCommentDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: any,
   ) {
-    const userId = req.user.userId;
-    const user = await this.userService.findUserById(userId); // Busca el usuario completo
-    return this.commentService.createComment(createCommentDto, user);
+    try {
+      const user = req.user; // Obtén el usuario autenticado desde el request
+      const comment = await this.commentService.createComment(
+        createCommentDto,
+        user,
+      );
+      return { message: 'Comment created successfully', data: comment };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   @Get('post/:id')
