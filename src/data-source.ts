@@ -1,24 +1,7 @@
-// import { DataSource } from 'typeorm';
-// import { User } from './user/user.entity';
-// import { Post } from './posts/posts.entity';
-// import { Comment } from './comments/comment.entity';
-
-// export const AppDataSource = new DataSource({
-//   type: 'postgres',
-//   host: 'localhost',
-//   port: 5432,
-//   username: 'diego',
-//   password: 'diego1302',
-//   database: 'blog',
-//   entities: [User, Post, Comment],
-//   migrations: ['src/migrations/*.ts'], // Ruta de migraciones
-//   synchronize: false,
-// });
-
 import { DataSource } from 'typeorm';
 import { User } from './user/user.entity';
-import { Post } from './posts/posts.entity';
 import { Comment } from './comments/comment.entity';
+import { Post } from './posts/posts.entity';
 import { PostReaction } from './posts/postreaction.entity';
 
 export const AppDataSource = new DataSource({
@@ -28,7 +11,7 @@ export const AppDataSource = new DataSource({
   username: 'postgres',
   password: 'diego1302',
   database: 'postgres',
-  entities: [User, Post, Comment, PostReaction],
+  entities: [User, Comment, PostReaction, Post],
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
   synchronize: false,
 });

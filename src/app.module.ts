@@ -6,13 +6,13 @@ import { PostsModule } from './posts/posts.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { User } from './user/user.entity';
-import { Post } from './posts/posts.entity';
 import { ChatgptModule } from './chatgpt/chatgpt.module';
 import { CommentsModule } from './comments/comments.module';
 import { Comment } from './comments/comment.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostReaction } from './posts/postreaction.entity';
+import { Post } from './posts/posts.entity';
 
 @Module({
   imports: [
@@ -31,7 +31,7 @@ import { PostReaction } from './posts/postreaction.entity';
         database: configService.get<string>('DB_NAME'),
         entities: [User, Post, Comment, PostReaction],
         migrations: ['dist/migrations/*.js'],
-        synchronize: false,
+        synchronize: false, // Cambiado a true para sincronizar automáticamente
       }),
     }),
 

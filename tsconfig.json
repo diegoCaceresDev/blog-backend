@@ -12,11 +12,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "paths": {
-      "@user/*": ["user/*"],
-      "@auth/*": ["auth/*"],
-      "@post/*": ["post/*"]
-    },
+
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,

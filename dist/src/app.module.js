@@ -14,13 +14,13 @@ const posts_module_1 = require("./posts/posts.module");
 const user_module_1 = require("./user/user.module");
 const auth_module_1 = require("./auth/auth.module");
 const user_entity_1 = require("./user/user.entity");
-const posts_entity_1 = require("./posts/posts.entity");
 const chatgpt_module_1 = require("./chatgpt/chatgpt.module");
 const comments_module_1 = require("./comments/comments.module");
 const comment_entity_1 = require("./comments/comment.entity");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const postreaction_entity_1 = require("./posts/postreaction.entity");
+const posts_entity_1 = require("./posts/posts.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
