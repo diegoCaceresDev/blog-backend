@@ -31,7 +31,7 @@ import { Post } from './posts/posts.entity';
         database: configService.get<string>('DB_NAME'),
         entities: [User, Post, Comment, PostReaction],
         migrations: ['dist/migrations/*.js'],
-        synchronize: false, // Cambiado a true para sincronizar automáticamente
+        synchronize: false,
       }),
     }),
 

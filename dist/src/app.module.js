@@ -42,7 +42,7 @@ exports.AppModule = AppModule = __decorate([
                     database: configService.get('DB_NAME'),
                     entities: [user_entity_1.User, posts_entity_1.Post, comment_entity_1.Comment, postreaction_entity_1.PostReaction],
                     migrations: ['dist/migrations/*.js'],
-                    synchronize: false,
+                    synchronize: true,
                 }),
             }),
             posts_module_1.PostsModule,

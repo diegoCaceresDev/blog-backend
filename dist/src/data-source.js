@@ -15,6 +15,6 @@ exports.AppDataSource = new typeorm_1.DataSource({
     database: 'postgres',
     entities: [user_entity_1.User, comment_entity_1.Comment, postreaction_entity_1.PostReaction, posts_entity_1.Post],
     migrations: [__dirname + '/migrations/*{.ts,.js}'],
-    synchronize: false,
+    synchronize: true,
 });
 //# sourceMappingURL=data-source.js.map
