@@ -11,8 +11,9 @@ import { CommentsModule } from './comments/comments.module';
 import { Comment } from './comments/comment.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PostReaction } from './posts/postreaction.entity';
+import { PostReaction } from './postreaction/postreaction.entity';
 import { Post } from './posts/posts.entity';
+import { PostReactionModule } from './postreaction/postreaction.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { Post } from './posts/posts.entity';
     AuthModule,
     ChatgptModule,
     CommentsModule,
+    PostReactionModule,
   ],
   providers: [AppService],
   controllers: [AppController],

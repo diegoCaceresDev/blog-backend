@@ -9,7 +9,7 @@ import { User } from 'src/user/user.entity';
 import { UserModule } from 'src/user/user.module';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { PostReaction } from './postreaction.entity';
+import { PostReaction } from '../postreaction/postreaction.entity';
 
 @Module({
   imports: [
@@ -26,5 +26,6 @@ import { PostReaction } from './postreaction.entity';
   ],
   providers: [PostService, JwtAuthGuard, JwtStrategy],
   controllers: [PostController],
+  exports: [TypeOrmModule],
 })
 export class PostsModule {}

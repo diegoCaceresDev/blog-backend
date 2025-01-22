@@ -4,7 +4,7 @@ import { User } from './user.entity';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { AuthModule } from '../auth/auth.module'; // Importa el módulo de autenticación con forwardRef si es necesario
-import { PostReaction } from 'src/posts/postreaction.entity';
+import { PostReaction } from 'src/postreaction/postreaction.entity';
 
 @Module({
   imports: [

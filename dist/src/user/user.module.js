@@ -13,7 +13,7 @@ const user_entity_1 = require("./user.entity");
 const user_service_1 = require("./user.service");
 const user_controller_1 = require("./user.controller");
 const auth_module_1 = require("../auth/auth.module");
-const postreaction_entity_1 = require("../posts/postreaction.entity");
+const postreaction_entity_1 = require("../postreaction/postreaction.entity");
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;

@@ -21,7 +21,6 @@ const platform_express_1 = require("@nestjs/platform-express");
 const multer_1 = require("multer");
 const path_1 = require("path");
 const update_post_dto_1 = require("./dto/update-post.dto");
-const create_postreaction_dto_1 = require("./dto/create-postreaction.dto");
 const jwt_authwithrotle_guard_1 = require("../auth/jwt-authwithrotle.guard");
 let PostController = class PostController {
     postService;
@@ -59,11 +58,6 @@ let PostController = class PostController {
         const posts = await this.postService.getPostsByUserId(userId, page, limit);
         const total = await this.postService.countPostsByUserId(userId);
         return { posts, total };
-    }
-    async reactToPost(postId, createReactionDto, req) {
-        const userId = req.user.userId;
-        const updatedPost = await this.postService.addReactionToPost(postId, userId, createReactionDto);
-        return { message: 'Reaction added successfully', data: updatedPost };
     }
     async getPostById(postId) {
         return this.postService.getPostById(postId);
@@ -156,16 +150,6 @@ __decorate([
     __metadata("design:paramtypes", [Number, Number, Number]),
     __metadata("design:returntype", Promise)
 ], PostController.prototype, "getPostsByUserId", null);
-__decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Post)(':id/reactions'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
-    __param(2, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, create_postreaction_dto_1.CreatePostReactionDto, Object]),
-    __metadata("design:returntype", Promise)
-], PostController.prototype, "reactToPost", null);
 __decorate([
     (0, common_1.Get)(':id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),

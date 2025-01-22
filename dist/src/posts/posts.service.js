@@ -18,7 +18,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const posts_entity_1 = require("./posts.entity");
 const user_entity_1 = require("../user/user.entity");
-const postreaction_entity_1 = require("./postreaction.entity");
+const postreaction_entity_1 = require("../postreaction/postreaction.entity");
 let PostService = class PostService {
     postRepository;
     userRepository;
@@ -108,55 +108,6 @@ let PostService = class PostService {
             throw new common_1.UnauthorizedException('No tienes permiso para eliminar este post');
         }
         await this.postRepository.delete(postId);
-    }
-    async addReactionToPost(postId, userId, createReactionDto) {
-        const post = await this.postRepository.findOne({ where: { id: postId } });
-        if (!post) {
-            throw new common_1.NotFoundException(`Post with ID ${postId} not found`);
-        }
-        const user = await this.userRepository.findOne({ where: { id: userId } });
-        if (!user) {
-            throw new common_1.NotFoundException(`User with ID ${userId} not found`);
-        }
-        let reaction = await this.reactionRepository.findOne({
-            where: { user: { id: userId }, post: { id: postId } },
-        });
-        if (reaction) {
-            if (reaction.type !== createReactionDto.type) {
-                if (reaction.type === 'like') {
-                    post.likeCount -= 1;
-                }
-                else if (reaction.type === 'dislike') {
-                    post.dislikeCount -= 1;
-                }
-                reaction.type = createReactionDto.type;
-                if (createReactionDto.type === 'like') {
-                    post.likeCount += 1;
-                }
-                else if (createReactionDto.type === 'dislike') {
-                    post.dislikeCount += 1;
-                }
-            }
-            else {
-                throw new common_1.BadRequestException('You have already reacted with this type');
-            }
-        }
-        else {
-            reaction = this.reactionRepository.create({
-                type: createReactionDto.type,
-                user,
-                post,
-            });
-            if (createReactionDto.type === 'like') {
-                post.likeCount += 1;
-            }
-            else if (createReactionDto.type === 'dislike') {
-                post.dislikeCount += 1;
-            }
-        }
-        await this.reactionRepository.save(reaction);
-        await this.postRepository.save(post);
-        return post;
     }
     async countDailyPosts(userId) {
         const today = new Date();

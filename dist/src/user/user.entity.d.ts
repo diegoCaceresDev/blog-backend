@@ -1,6 +1,6 @@
 import { Post } from '../posts/posts.entity';
 import { Comment } from '../comments/comment.entity';
-import { PostReaction } from 'src/posts/postreaction.entity';
+import { PostReaction } from 'src/postreaction/postreaction.entity';
 export declare class User {
     id: number;
     nombre: string;

@@ -19,8 +19,9 @@ const comments_module_1 = require("./comments/comments.module");
 const comment_entity_1 = require("./comments/comment.entity");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const postreaction_entity_1 = require("./posts/postreaction.entity");
+const postreaction_entity_1 = require("./postreaction/postreaction.entity");
 const posts_entity_1 = require("./posts/posts.entity");
+const postreaction_module_1 = require("./postreaction/postreaction.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -42,7 +43,7 @@ exports.AppModule = AppModule = __decorate([
                     database: configService.get('DB_NAME'),
                     entities: [user_entity_1.User, posts_entity_1.Post, comment_entity_1.Comment, postreaction_entity_1.PostReaction],
                     migrations: ['dist/migrations/*.js'],
-                    synchronize: true,
+                    synchronize: false,
                 }),
             }),
             posts_module_1.PostsModule,
@@ -50,6 +51,7 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             chatgpt_module_1.ChatgptModule,
             comments_module_1.CommentsModule,
+            postreaction_module_1.PostReactionModule,
         ],
         providers: [app_service_1.AppService],
         controllers: [app_controller_1.AppController],

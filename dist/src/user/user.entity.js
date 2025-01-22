@@ -13,7 +13,7 @@ exports.User = void 0;
 const typeorm_1 = require("typeorm");
 const posts_entity_1 = require("../posts/posts.entity");
 const comment_entity_1 = require("../comments/comment.entity");
-const postreaction_entity_1 = require("../posts/postreaction.entity");
+const postreaction_entity_1 = require("../postreaction/postreaction.entity");
 let User = class User {
     id;
     nombre;

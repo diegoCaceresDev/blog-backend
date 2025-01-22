@@ -3,7 +3,6 @@ import { PostService } from './posts.service';
 import { AuthenticatedRequest } from '../common/request.interface';
 import { Post as PostEntity } from './posts.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { CreatePostReactionDto } from './dto/create-postreaction.dto';
 export declare class PostController {
     private readonly postService;
     constructor(postService: PostService);
@@ -19,10 +18,6 @@ export declare class PostController {
     getPostsByUserId(userId: number, page?: number, limit?: number): Promise<{
         posts: PostEntity[];
         total: number;
-    }>;
-    reactToPost(postId: number, createReactionDto: CreatePostReactionDto, req: any): Promise<{
-        message: string;
-        data: PostEntity;
     }>;
     getPostById(postId: number): Promise<PostEntity>;
     deletePost(postId: number, req: any): Promise<{

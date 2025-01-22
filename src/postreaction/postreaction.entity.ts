@@ -1,13 +1,13 @@
 import { Entity, ManyToOne, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { User } from '../user/user.entity';
-import { Post } from './posts.entity';
+import { Post } from '../posts/posts.entity';
 
-@Entity()
+@Entity('postReaction')
 export class PostReaction {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'enum', enum: ['like', 'dislike'] })
+  @Column({ type: 'varchar' })
   type: 'like' | 'dislike';
 
   @ManyToOne(() => User, (user) => user.reactions, { onDelete: 'CASCADE' })

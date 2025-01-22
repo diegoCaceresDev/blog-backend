@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Post } from '../posts/posts.entity';
 import { Comment } from '../comments/comment.entity'; // Importa la entidad Comment
-import { PostReaction } from 'src/posts/postreaction.entity';
+import { PostReaction } from 'src/postreaction/postreaction.entity';
 
 @Entity()
 export class User {

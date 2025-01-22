@@ -22,7 +22,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { Multer } from 'multer';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { CreatePostReactionDto } from './dto/create-postreaction.dto';
+import { CreatePostReactionDto } from '../postreaction/dto/create-postreaction.dto';
 import { JwtAuthGuardWithRole } from 'src/auth/jwt-authwithrotle.guard';
 
 @Controller('posts')
@@ -145,22 +145,6 @@ export class PostController {
     const posts = await this.postService.getPostsByUserId(userId, page, limit);
     const total = await this.postService.countPostsByUserId(userId); // Método que cuenta el total de posts por usuario
     return { posts, total };
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post(':id/reactions')
-  async reactToPost(
-    @Param('id') postId: number,
-    @Body() createReactionDto: CreatePostReactionDto,
-    @Req() req: any,
-  ) {
-    const userId = req.user.userId;
-    const updatedPost = await this.postService.addReactionToPost(
-      postId,
-      userId,
-      createReactionDto,
-    );
-    return { message: 'Reaction added successfully', data: updatedPost };
   }
 
   // Ruta para obtener un post por su ID

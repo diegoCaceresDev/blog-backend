@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Comment } from '../comments/comment.entity'; // Importa la entidad Comment
-import { PostReaction } from './postreaction.entity';
+import { PostReaction } from '../postreaction/postreaction.entity';
 
 @Entity()
 export class Post {

@@ -10,7 +10,7 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# OS
+# OSz   
 .DS_Store
 
 # Tests

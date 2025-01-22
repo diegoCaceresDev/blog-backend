@@ -5,12 +5,15 @@ import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { CreateSuperUserDto } from './dto/create-superuser.dto';
+import { PostReaction } from 'src/postreaction/postreaction.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(PostReaction)
+    private readonly reactionRepository: Repository<PostReaction>,
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {

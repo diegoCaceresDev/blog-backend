@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostReaction = void 0;
 const typeorm_1 = require("typeorm");
 const user_entity_1 = require("../user/user.entity");
-const posts_entity_1 = require("./posts.entity");
+const posts_entity_1 = require("../posts/posts.entity");
 let PostReaction = class PostReaction {
     id;
     type;
@@ -25,7 +25,7 @@ __decorate([
     __metadata("design:type", Number)
 ], PostReaction.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: ['like', 'dislike'] }),
+    (0, typeorm_1.Column)({ type: 'varchar' }),
     __metadata("design:type", String)
 ], PostReaction.prototype, "type", void 0);
 __decorate([
@@ -37,6 +37,6 @@ __decorate([
     __metadata("design:type", posts_entity_1.Post)
 ], PostReaction.prototype, "post", void 0);
 exports.PostReaction = PostReaction = __decorate([
-    (0, typeorm_1.Entity)()
+    (0, typeorm_1.Entity)('postReaction')
 ], PostReaction);
 //# sourceMappingURL=postreaction.entity.js.map

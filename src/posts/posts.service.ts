@@ -10,8 +10,8 @@ import { Post } from './posts.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { User } from '../user/user.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { PostReaction } from './postreaction.entity';
-import { CreatePostReactionDto } from './dto/create-postreaction.dto';
+import { PostReaction } from '../postreaction/postreaction.entity';
+import { CreatePostReactionDto } from '../postreaction/dto/create-postreaction.dto';
 
 @Injectable()
 export class PostService {
@@ -164,75 +164,6 @@ export class PostService {
 
     // Si pasa las verificaciones, proceder con la eliminación
     await this.postRepository.delete(postId);
-  }
-
-  // Método para agregar o actualizar reacciones
-  async addReactionToPost(
-    postId: number,
-    userId: number,
-    createReactionDto: CreatePostReactionDto,
-  ): Promise<Post> {
-    const post = await this.postRepository.findOne({ where: { id: postId } });
-    if (!post) {
-      throw new NotFoundException(`Post with ID ${postId} not found`);
-    }
-
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
-    }
-
-    // Buscar reacción existente
-    let reaction = await this.reactionRepository.findOne({
-      where: { user: { id: userId }, post: { id: postId } },
-    });
-
-    if (reaction) {
-      // Si la reacción es diferente, actualizamos los contadores
-      if (reaction.type !== createReactionDto.type) {
-        // Decrementar el contador de la reacción anterior
-        if (reaction.type === 'like') {
-          post.likeCount -= 1;
-        } else if (reaction.type === 'dislike') {
-          post.dislikeCount -= 1;
-        }
-
-        // Actualizar el tipo de reacción
-        reaction.type = createReactionDto.type;
-
-        // Incrementar el contador de la nueva reacción
-        if (createReactionDto.type === 'like') {
-          post.likeCount += 1;
-        } else if (createReactionDto.type === 'dislike') {
-          post.dislikeCount += 1;
-        }
-      } else {
-        throw new BadRequestException(
-          'You have already reacted with this type',
-        );
-      }
-    } else {
-      // Crear una nueva reacción
-      reaction = this.reactionRepository.create({
-        type: createReactionDto.type,
-        user,
-        post,
-      });
-
-      // Incrementar el contador correspondiente
-      if (createReactionDto.type === 'like') {
-        post.likeCount += 1;
-      } else if (createReactionDto.type === 'dislike') {
-        post.dislikeCount += 1;
-      }
-    }
-
-    await this.reactionRepository.save(reaction);
-
-    // Guardar los cambios en el post
-    await this.postRepository.save(post);
-
-    return post;
   }
 
   async countDailyPosts(userId: number): Promise<number> {
