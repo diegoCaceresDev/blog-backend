@@ -18,9 +18,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "typeorm": "npx typeorm-ts-node-commonjs -d ./src/config/data-source.ts",
     "typeorm:generate": "npm run typeorm -- migration:generate",
-    "migration:run": "typeorm migration:run --dataSource src/data-source.ts"
+    "migration:run": "typeorm migration:run --dataSource src/config/data-source.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -37,6 +37,7 @@
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "common-js": "^0.3.8",
     "cors": "^2.8.5",
     "multer": "^1.4.5-lts.1",
     "openai": "^4.57.0",

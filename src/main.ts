@@ -27,7 +27,10 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.useStaticAssets(join(__dirname, '../../', 'public/images'));
+  // Using absolute path instead of relative path
+  const imagesPath = join(process.cwd(), 'public/images');
+  console.log('Serving images from:', imagesPath);
+  app.useStaticAssets(imagesPath);
 
   await app.listen(3000);
 }

@@ -23,6 +23,12 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ type: 'date', nullable: true })
+  birthDate: Date;
+
+  @Column({ type: 'int', nullable: true })
+  lifeExpectancy: number;
+
   @OneToMany(() => PostReaction, (reaction) => reaction.user, { cascade: true })
   reactions: PostReaction[];
 

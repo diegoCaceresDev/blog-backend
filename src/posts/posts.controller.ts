@@ -160,7 +160,7 @@ export class PostController {
     @Param('id') postId: number,
     @Req() req: any, // El request ahora tiene userId y userRole
   ) {
-    const userId = req.user.id; // ID del usuario autenticado
+    const userId = req.user.userId; // ID del usuario autenticado
     const userRole = req.user.role; // Rol del usuario autenticado
     console.log(req.user);
     await this.postService.deletePostById(postId, userId, userRole);

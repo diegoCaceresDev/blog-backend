@@ -14,6 +14,9 @@ import { AppService } from './app.service';
 import { PostReaction } from './postreaction/postreaction.entity';
 import { Post } from './posts/posts.entity';
 import { PostReactionModule } from './postreaction/postreaction.module';
+import { DailyPhraseModule } from './daily-phrase/daily-phrase.module';
+import { DailyPhrase } from './daily-phrase/entities/daily-phrase.entity';
+import { MementoModule } from './memento/memento.module';
 
 @Module({
   imports: [
@@ -30,9 +33,10 @@ import { PostReactionModule } from './postreaction/postreaction.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User, Post, Comment, PostReaction],
+        entities: [User, Post, Comment, PostReaction, DailyPhrase],
         migrations: ['dist/migrations/*.js'],
-        synchronize: false,
+        autoLoadEntities: true,
+        synchronize: true,
       }),
     }),
 
@@ -42,6 +46,8 @@ import { PostReactionModule } from './postreaction/postreaction.module';
     ChatgptModule,
     CommentsModule,
     PostReactionModule,
+    DailyPhraseModule,
+    MementoModule,
   ],
   providers: [AppService],
   controllers: [AppController],
